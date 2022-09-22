@@ -1,0 +1,227 @@
+---
+title: "Linked Lists - Python"
+author: "Tural Sadigov"
+date: today
+format: 
+    html:
+      theme: 
+        light: united
+        dark: darkly
+      smooth-scroll: true
+engine: knitr
+always_allow_html: true
+editor: visual
+toc: true
+toc-location: right
+number-sections: true
+cap-location: bottom
+fig-cap-location: bottom
+tbl-cap-location: top
+page-layout: article
+code-fold: show
+code-summary: "Collapse/show the code below"
+code-overflow: scroll
+code-line-numbers: true
+code-copy: true
+execute:
+  echo: true
+  warning: false
+  eval: true
+  output: true
+  error: false
+  cache: false
+  freeze: true
+  out.width: "100%"
+fig-align: center
+---
+
+# Node class
+
+```{python}
+class Node:
+  def __init__(self, value):
+    self.value = value
+    self.next = None
+```
+
+# create a linked list
+
+```{python}
+a = Node('A')
+b = Node('B')
+c = Node('C')
+d = Node('D')
+a.next = b
+b.next = c
+c.next = d
+```
+
+# traverse linked-list
+
+Note that linked list we created is A --\> B --\> C --\> D --\> Null
+
+```{python}
+def print_linked_list(head):
+  while head:
+    print(head.value)
+    head = head.next
+  
+print_linked_list(a)
+```
+
+# traverse linked-list RECURSIVELY
+
+```{python}
+def print_linked_list_recursively(head):
+  if head is None:
+    return
+  print(head.val)
+  print_linked_list_recursively(head.next)
+  
+print_linked_list(a)
+```
+
+# return linked list values in order
+
+```{python}
+def ll_values(head):
+  if head is None:
+    return
+  res = []
+  while head:
+    res.append(head.value)
+    head = head.next
+  return res
+
+ll_values(a)
+```
+
+# return linked list values in order recursively
+
+```{python}
+def ll_values_rec(head):
+  if head is None:
+    return
+  return [head.value] + ll_values_rec(head.next) 
+
+ll_values(a)
+```
+
+# sum of the values
+
+```{python}
+def sum_ll(head):
+  if head is None:
+    return 0
+  s = 0
+  while head:
+    s += head.value
+    head = head.next
+  return s
+
+a = Node(2)
+b = Node(8)
+c = Node(3)
+d = Node(7)
+a.next = b
+b.next = c
+c.next = d
+
+sum_ll(a)
+```
+
+# sum of the values recursively
+
+```{python}
+def sum_ll_rec(head):
+  if head is None:
+    return 0
+  return head.value + sum_ll_rec(head.next)
+
+sum_ll_rec(a)
+```
+
+ 
+# find target value
+
+```{python}
+def find_target(head, target):
+  if head is None:
+    return False
+  while head:
+    if head.value == target:
+      return True
+    head = head.next
+  return False
+
+find_target(a, 3)
+find_target(a, 9)
+```
+
+# find target value recursively
+
+```{python}
+def find_target_rec(head, target):
+  if head is None:
+    return False
+  if head.value == target:
+    return True
+  return find_target_rec(head.next, target)
+
+find_target_rec(a, 3)
+find_target_rec(a, 9)
+```
+
+# get node value at a given index
+
+```{python}
+def get_node_value(head, index):
+  if head is None:
+    return
+  count = 0
+  while head:
+    if count == index:
+      return head.value
+    head = head.next
+    count +=1
+  return None
+get_node_value(a, 3)
+get_node_value(a, 2)
+```
+
+
+# get node value at a given index recursively
+
+```{python}
+def get_node_value_rec(head, index):
+  if head is None:
+    return
+  if index == 0:
+    return head.value
+  return get_node_value_rec(head.next, index-1)
+
+get_node_value_rec(a, 3)
+get_node_value_rec(a, 2)
+```
+
+
+# reverse a linked list in place
+
+```{python}
+def reverse_ll(head):
+  if head is None:
+    return None
+  dummy = Node(None)
+  dummy.next = head
+  prev = dummy
+  cur = head
+  while cur:
+    temp = cur.next
+    cur.next = prev
+    prev = cur
+    cur = temp
+  return prev
+
+print_linked_list(reverse_ll(a))
+```
+

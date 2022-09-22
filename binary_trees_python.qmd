@@ -1,0 +1,351 @@
+---
+title: "Binary Trees - Python"
+author: "Tural Sadigov"
+date: today
+format: 
+    html:
+      theme: 
+        light: united
+        dark: darkly
+editor: visual
+chunk_output_type: console
+fig-align: center
+always_allow_html: true
+toc: true
+toc-location: right
+number-sections: true
+page-layout: article
+code-overflow: scroll
+code-line-numbers: false
+code-copy: true
+execute:
+  echo: true
+  warning: false
+  eval: true
+  output: true
+  error: false
+  freeze: true
+  out.width: "100%"
+  cache: false
+---
+
+# Node class
+
+```{python}
+class Node:
+  def __init__(self, val):
+    self.val = val
+    self.left = None
+    self.right = None
+```
+
+# instances
+
+```{python}
+a = Node('a')
+b = Node('b')
+c = Node('c')
+d = Node('d')
+e = Node('e')
+f = Node('f')
+
+a.left = b
+a.right = c
+b.left = d
+b.right = e
+c.right = f
+
+   #      a
+   #    /   \
+   #   b     c
+   #  / \     \ 
+   # d   e     f
+```
+
+# print depth-first values
+
+```{python}
+def depth_first_print(root):
+  if root is None:
+    return
+  stack = [root]
+  while stack:
+    cur = stack.pop()
+    print(cur.val)
+    for child in [cur.right, cur.left]:
+      if child:
+        stack.append(child)
+
+depth_first_print(a)
+```
+
+# print depth-first values recursively
+
+```{python}
+def depth_first_print_rec(root):
+  if root is None:
+    return
+  print(root)
+  depth_first_print_rec(root.right)
+  depth_first_print_sec(root.left)
+
+depth_first_print(a)
+```
+
+# list depth-first values
+
+```{python}
+def get_depth_first_values(root):
+  if root is None:
+    return []
+  stack = [root]
+  res = []
+  while stack:
+    cur = stack.pop()
+    res.append(cur.val)
+    for child in [cur.right, cur.left]:
+      if child:
+        stack.append(child)
+  return res
+
+get_depth_first_values(a)
+```
+
+# list depth-first values recursively
+
+```{python}
+def get_df_values_rec(root):
+  if root is None:
+    return []
+  return [root.val] + get_df_values_rec(root.left) + get_df_values_rec(root.right)
+
+get_df_values_rec(a)
+```
+
+# list breadth-first values
+
+```{python}
+def get_bf_values(root):
+  if root is None:
+    return []
+  q = [root]
+  res = []
+  while q:
+    cur = q.pop(0)
+    res.append(cur.val)
+    print(cur.val)
+    for child in [cur.left, cur.right]:
+      if child:
+        q.append(child)
+  return res
+
+get_bf_values(a)
+```
+
+# find target value - depth first 
+
+```{python}
+def does_exist_df(root, target):
+  if root is None:
+    return False
+  stack = [root]
+  while stack:
+    cur = stack.pop()
+    if cur.val == target:
+      return True
+    for child in [cur.left, cur.right]:
+      if child:
+        stack.append(child)
+  return False
+
+does_exist_df(None, 'a')
+does_exist_df(a, 'a')
+does_exist_df(a, 'e')
+does_exist_df(a, 'l')
+```
+
+# find target value - depth first - recuirsive
+
+```{python}
+def does_exist_df_rec(root, target):
+  if root is None:
+    return False
+  if root.val == target:
+    return True
+  return does_exist_df_rec(root.left, target) or does_exist_df_rec(root.right, target)
+
+does_exist_df_rec(None, 'a')
+does_exist_df_rec(a, 'a')
+does_exist_df_rec(a, 'e')
+does_exist_df_rec(a, 'l')
+```
+
+
+
+# find target value - breadth first
+
+```{python}
+def does_exist_bf(root, target):
+  if root is None:
+    return False
+  if root.val == target:
+    return True
+  
+  q = [root]
+  while q:
+    cur = q.pop(0)
+    if cur.val == target:
+      return True
+    for child in [cur.left, cur.right]:
+      if child:
+        q.append(child)
+  return False
+
+does_exist_bf(None, 'a')
+does_exist_bf(a, 'a')
+does_exist_bf(a, 'e')
+does_exist_bf(a, 'l')
+```
+
+
+# total sum - depth first
+
+```{python}
+def total_sum(root):
+  if root is None:
+    return 0
+  s = 0
+  stack = [root]
+  while stack:
+    cur = stack.pop()
+    s += cur.val
+    for child in [cur.left, cur.right]:
+      if child:
+        stack.append(child)
+  return s
+
+a = Node(3)
+b = Node(11)
+c = Node(4)
+d = Node(4)
+e = Node(2)
+f = Node(1)
+
+a.left = b
+a.right = c
+b.left = d
+b.right = e
+c.right = f
+
+total_sum(a)
+```
+
+# total sum - depth first - recusively
+
+```{python}
+def total_sum_rec(root):
+  if root is None:
+    return 0
+  return root.val + total_sum_rec(root.left) + total_sum_rec(root.right)
+
+total_sum_rec(a)
+```
+
+# total sum - breadth first
+
+```{python}
+def total_sum_bf(root):
+  if root is None:
+    return 0
+  s = 0
+  q = [root]
+  while q:
+    cur = q.pop(0)
+    s += cur.val
+    for child in [cur.left, cur.right]:
+      if child:
+        q.append(child)
+  return s
+
+total_sum_bf(a)
+```
+
+# tree min - depth first
+
+```{python}
+def tree_min(root):
+  if root is None:
+    return
+  min_val = float('inf')
+  stack = [root]
+  while stack:
+    cur = stack.pop()
+    if cur.val<min_val:
+      min_val = cur.val
+    for child in [cur.left, cur.right]:
+      if child:
+        stack.append(child)
+  return min_val
+
+tree_min(a)
+```
+
+# tree min - depth first - recursively
+
+```{python}
+def tree_min_rec(root):
+  if root is None:
+    return float('inf')
+  return min(root.val, tree_min_rec(root.left), tree_min_rec(root.right))
+
+tree_min_rec(a)
+```
+
+# tree min - breadth first
+
+```{python}
+def tree_min_bf(root):
+  if root is None:
+    return 
+  q = [root]
+  min_val = float('inf')
+  while q:
+    cur = q.pop(0)
+    if cur.val <min_val:
+      min_val = cur.val
+    for child in [cur.left, cur.right]:
+      if child:
+        q.append(child)
+  return min_val
+
+tree_min_bf(a)
+```
+
+
+# max path sum recursively
+
+```{python}
+def max_path_sum(root):
+  if root is None:
+    return -float('inf')
+  if root.left is None and root.right is None: 
+    return root.val
+  return root.val + max(max_path_sum(root.left), 
+                        max_path_sum(root.right))
+
+
+a = Node(-11)
+b = Node(-11)
+c = Node(-3)
+d = Node(-4)
+e = Node(-2000)
+f = Node(-100)
+
+a.left = b
+a.right = c
+b.left = d
+b.right = e
+c.right = f
+
+max_path_sum(a)
+```
