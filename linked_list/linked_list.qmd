@@ -1,5 +1,5 @@
 ---
-title: "Linked Lists - Python"
+title: "Binary Trees - Python"
 author: "Tural Sadigov"
 date: today
 format: 
@@ -7,21 +7,17 @@ format:
       theme: 
         light: united
         dark: darkly
-      smooth-scroll: true
 engine: knitr
-always_allow_html: true
 editor: visual
+chunk_output_type: console
+fig-align: center
+always_allow_html: true
 toc: true
 toc-location: right
 number-sections: true
-cap-location: bottom
-fig-cap-location: bottom
-tbl-cap-location: top
 page-layout: article
-code-fold: show
-code-summary: "Collapse/show the code below"
 code-overflow: scroll
-code-line-numbers: true
+code-line-numbers: false
 code-copy: true
 execute:
   echo: true
@@ -29,10 +25,9 @@ execute:
   eval: true
   output: true
   error: false
-  cache: false
   freeze: true
   out.width: "100%"
-fig-align: center
+  cache: false
 ---
 
 # Node class
@@ -58,7 +53,7 @@ c.next = d
 
 # traverse linked-list
 
-Note that linked list we created is A --\> B --\> C --\> D --\> Null
+Note that linked list we created is A --> B --> C --> D --> Null
 
 ```{python}
 def print_linked_list(head):
@@ -141,7 +136,6 @@ def sum_ll_rec(head):
 sum_ll_rec(a)
 ```
 
- 
 # find target value
 
 ```{python}
@@ -189,7 +183,6 @@ get_node_value(a, 3)
 get_node_value(a, 2)
 ```
 
-
 # get node value at a given index recursively
 
 ```{python}
@@ -205,23 +198,176 @@ get_node_value_rec(a, 2)
 ```
 
 
-# reverse a linked list in place
+# reverse a linked list
 
 ```{python}
 def reverse_ll(head):
-  if head is None:
-    return None
-  dummy = Node(None)
-  dummy.next = head
-  prev = dummy
-  cur = head
+  prev, cur = None, head
+  
   while cur:
     temp = cur.next
     cur.next = prev
     prev = cur
     cur = temp
+    
   return prev
+```
 
-print_linked_list(reverse_ll(a))
+```{python}
+class Node:
+  def __init__(self, value):
+    self.value = value
+    self.next = None
+    
+    
+a = Node('A')
+b = Node('B')
+c = Node('C')
+d = Node('D')
+a.next = b
+b.next = c
+c.next = d
+print_linked_list(a)
+reverse_ll(a)
+print_linked_list(a)
+print_linked_list(d)
+```
+
+# reverse a linked list recursively
+
+## Method 1
+
+```{python}
+def reverse_ll_rec(head):
+  if head is None: 
+    return None
+  
+  new_head = head
+  if head.next:
+    new_head = reverse_ll_rec(head.next)
+    head.next.next = head
+  head.next = None
+  
+  return new_head
+```
+
+## Method 2
+
+```{python}
+def reverse_ll_rec_2(head, prev = None):
+  if head is None:
+    return prev
+  
+  temp = head.next
+  head.next = prev
+  return reverse_ll_rec_2(temp, head)
+```
+
+
+# zipper list problem 
+
+## Method 1
+
+```{python}
+def zipper_list(head1, head2):
+  cur1 = head1
+  cur2 = head2
+  while cur1 and cur2:
+    temp1 = cur1.next
+    cur1.next = cur2
+    temp2 = cur2.next
+    if temp1:
+      cur2.next = temp1
+    cur1 = temp1
+    cur2 = temp2
+  return head1  
+
+
+class Node:
+  def __init__(self, value):
+    self.value = value
+    self.next = None
+    
+a = Node('A')
+b = Node('B')
+a.next = b
+
+q = Node('Q')
+
+
+print_linked_list(zipper_list(a, q))
+```
+
+## Method 2
+
+```{python}
+def zipper_list_2(head1, head2):
+  tail = head1
+  cur1 = head1.next
+  cur2 = head2
+  count = 0
+  while cur1 and cur2:
+    if count%2==0:
+      tail.next = cur2
+      cur2 = cur2.next
+    else:
+      tail.next = cur1
+      cur1 = cur1.next
+    count +=1
+    tail = tail.next
+  
+  if cur1:
+    tail.next = cur1
+  if cur2:
+    tail.next = cur2
+  
+  return head1  
+
+class Node:
+  def __init__(self, value):
+    self.value = value
+    self.next = None
+    
+a = Node('A')
+b = Node('B')
+a.next = b
+
+q = Node('Q')
+r = Node('R')
+s = Node('S')
+q.next = r
+r.next = s
+
+print_linked_list(zipper_list_2(a, q))
+```
+
+# zipper list problem recursively
+
+```{python}
+def zipper_list_rec(head1, head2):
+  if head1 is None and head2 is None:
+    return None
+  if head2 is None:
+    return head1
+  if head1 is None:
+    return head2
+  
+  temp1 = head1.next
+  temp2 = head2.next
+  head1.next = head2
+  head2.next = zipper_list_rec(temp1, temp2)
+  return head1
+
+a = Node('A')
+b = Node('B')
+a.next = b
+
+q = Node('Q')
+r = Node('R')
+s = Node('S')
+q.next = r
+r.next = s
+
+print_linked_list(zipper_list_rec(a, q))
 ```
 
